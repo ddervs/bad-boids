@@ -1,0 +1,7 @@
+move_to_middle_strength: 0.01
+alert_distance: 100
+formation_flying_distance: 10000
+formation_flying_strength: 0.125
+# Plot limits - need to be python tuples
+x_plot_limits: !!python/tuple [-500, 1500]
+y_plot_limits: !!python/tuple [-500, 1500]
