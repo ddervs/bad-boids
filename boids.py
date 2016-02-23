@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-
+import random
 
 class Boids(object):
 
@@ -41,3 +41,11 @@ class Boids(object):
     def animate(self, frame):
         self.update_boids()
         self.scatter.set_offsets(zip(self.boids[0], self.boids[1]))
+
+
+def new_flock(count, xlimits, ylimits, vxlimits, vylimits):
+    boids_x = [random.uniform(*xlimits) for x in range(count)]
+    boids_y = [random.uniform(*ylimits) for x in range(count)]
+    boid_x_velocities = [random.uniform(*vxlimits) for x in range(count)]
+    boid_y_velocities = [random.uniform(*vylimits) for x in range(count)]
+    return boids_x, boids_y, boid_x_velocities, boid_y_velocities
