@@ -18,22 +18,26 @@ boids = (boids_x, boids_y, boid_x_velocities, boid_y_velocities)
 
 def update_boids(boids):
     xs, ys, xvs, yvs = boids
+    move_to_middle_strength = 0.01
+    alert_distance = 100
+    formation_flying_distance = 10000
+    formation_flying_strength = 0.125
     # Fly towards the middle
     for i in range(len(xs)):
         for j in range(len(xs)):
-            xvs[i] = xvs[i] + (xs[j] - xs[i]) * 0.01 / len(xs)
-            yvs[i] = yvs[i] + (ys[j] - ys[i]) * 0.01 / len(xs)
+            xvs[i] += (xs[j] - xs[i]) * move_to_middle_strength / len(xs)
+            yvs[i] += (ys[j] - ys[i]) * move_to_middle_strength / len(xs)
     # Fly away from nearby boids
-            if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < 100:
-                xvs[i] = xvs[i] + (xs[i] - xs[j])
-                yvs[i] = yvs[i] + (ys[i] - ys[j])
+            if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < alert_distance:
+                xvs[i] += (xs[i] - xs[j])
+                yvs[i] += (ys[i] - ys[j])
     # Try to match speed with nearby boids
-            if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < 10000:
-                xvs[i] = xvs[i] + (xvs[j] - xvs[i]) * 0.125 / len(xs)
-                yvs[i] = yvs[i] + (yvs[j] - yvs[i]) * 0.125 / len(xs)
+            if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < formation_flying_distance:
+                xvs[i] += (xvs[j] - xvs[i]) * formation_flying_strength / len(xs)
+                yvs[i] += (yvs[j] - yvs[i]) * formation_flying_strength / len(xs)
     # Move according to velocities
-        xs[i] = xs[i] + xvs[i]
-        ys[i] = ys[i] + yvs[i]
+        xs[i] += xvs[i]
+        ys[i] += yvs[i]
 
 
 figure = plt.figure()
