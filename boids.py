@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-import random
+import numpy as np
 
 
 class Boids(object):
@@ -9,40 +9,59 @@ class Boids(object):
         self.config = config
         self.fig = plt.figure()
         self.ax = plt.axes(xlim=self.config['x_plot_limits'], ylim=self.config['y_plot_limits'])
-        self.scatter = self.ax.scatter(self.boids[0], self.boids[1])
+        self.scatter = self.ax.scatter(self.boids[0][:], self.boids[1][:])
 
     def fly_to_middle(self):
-            xs, ys, xvs, yvs = self.boids
-            for i in range(len(xs)):
-                for j in range(len(xs)):
-                    xvs[i] += (xs[j] - xs[i]) * self.config['move_to_middle_strength'] / len(xs)
-                    yvs[i] += (ys[j] - ys[i]) * self.config['move_to_middle_strength'] / len(xs)
-            self.boids = xs, ys, xvs, yvs
+
+        positions, velocities = self.boids
+        middle = np.mean(positions, 0)
+        direction_to_middle = positions - middle
+        velocities -= direction_to_middle * self.config['move_to_middle_strength']
+        positions += velocities
+        self.boids = positions, velocities
 
     def fly_away_nearby(self):
-            xs, ys, xvs, yvs = self.boids
-            for i in range(len(xs)):
-                for j in range(len(xs)):
-                    if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < self.config['alert_distance']:
-                        xvs[i] += (xs[i] - xs[j])
-                        yvs[i] += (ys[i] - ys[j])
-            self.boids = xs, ys, xvs, yvs
+
+        positions, velocities = self.boids
+
+        # 50x50x2 array of positional separations
+        separations = positions[np.newaxis, :, :] - positions[:, np.newaxis, :]
+        squared_displacements = separations * separations
+        square_distances = np.sum(squared_displacements, 2)
+
+        close_birds = square_distances < self.config['alert_distance']
+        separations_if_close = np.copy(separations)
+        far_away = np.logical_not(close_birds)
+        separations_if_close[:, :, 0][far_away] = 0
+        separations_if_close[:, :, 1][far_away] = 0
+
+        velocities = velocities + np.sum(separations_if_close, 1)
+        self.boids = positions, velocities
 
     def match_speed(self):
-            xs, ys, xvs, yvs = self.boids
-            for i in range(len(xs)):
-                for j in range(len(xs)):
-                    if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < self.config['formation_flying_distance']:
-                        xvs[i] += (xvs[j] - xvs[i]) * self.config['formation_flying_strength'] / len(xs)
-                        yvs[i] += (yvs[j] - yvs[i]) * self.config['formation_flying_strength'] / len(xs)
-            self.boids = xs, ys, xvs, yvs
+
+        positions, velocities = self.boids
+
+        # 50x50x2 array of positional separations
+        separations = positions[np.newaxis, :, :] - positions[:, np.newaxis, :]
+        squared_displacements = separations * separations
+        square_distances = np.sum(squared_displacements, 2)
+
+        # 50x50x2 array of velocity separations
+        velocity_differences = velocities[np.newaxis, :, :] - velocities[:, np.newaxis, :]
+        very_far = square_distances > self.config['formation_flying_distance']
+        velocity_differences_if_close = np.copy(velocity_differences)
+        velocity_differences_if_close[:, :, 0][very_far] = 0
+        velocity_differences_if_close[:, :, 1][very_far] = 0
+        velocities -= np.mean(velocity_differences_if_close, 0) * self.config['formation_flying_strength']
+
+        self.boids = positions, velocities
 
     def move_boids(self):
-            xs, ys, xvs, yvs = self.boids
-            for i in range(len(xs)):
-                xs[i] += xvs[i]
-                ys[i] += yvs[i]
-            self.boids = xs, ys, xvs, yvs
+
+        positions, velocities = self.boids
+        positions += velocities
+        self.boids = positions, velocities
 
     def update_boids(self):
 
@@ -53,13 +72,20 @@ class Boids(object):
 
     def animate(self, frame):
         self.update_boids()
-        self.scatter.set_offsets(zip(self.boids[0], self.boids[1]))
+        self.scatter.set_offsets(zip(self.boids[0][:], self.boids[0][:]))
 
 
 def new_flock(count, xlimits, ylimits, vxlimits, vylimits):
 
-    boids_x = [random.uniform(*xlimits) for x in range(count)]
-    boids_y = [random.uniform(*ylimits) for x in range(count)]
-    boid_x_velocities = [random.uniform(*vxlimits) for x in range(count)]
-    boid_y_velocities = [random.uniform(*vylimits) for x in range(count)]
-    return boids_x, boids_y, boid_x_velocities, boid_y_velocities
+    def rand_from_limits(limits):
+        return limits[0] + np.random.rand(count) * (limits[1] - limits[0])
+
+    boids_x = rand_from_limits(xlimits)
+    boids_y = rand_from_limits(ylimits)
+    boids_vx = rand_from_limits(vxlimits)
+    boids_vy = rand_from_limits(vylimits)
+
+    positions = np.column_stack((boids_x, boids_y))
+    velocities = np.column_stack((boids_vx, boids_vy))
+
+    return positions, velocities
