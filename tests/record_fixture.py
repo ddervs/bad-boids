@@ -5,8 +5,11 @@ import os
 
 os.chdir(os.path.pardir)
 
-boids_data = boids.new_flock(50, (-450, 50.0), (300.0, 600.0), (0, 10.0), (-20.0, 20.0))
-my_boids = boids.Boids(boids_data)
+config_filename = 'config.yaml'
+config = yaml.load(open(config_filename))
+boids_data = boids.new_flock(config['number_of_boids'], config['x_initial'], config['y_initial'], config['vx_initial'],
+                             config['vy_initial'])
+my_boids = boids.Boids(boids_data, config)
 
 # Regression Test
 reg_before = deepcopy(my_boids.boids)

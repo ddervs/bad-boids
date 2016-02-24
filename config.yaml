@@ -2,6 +2,12 @@ move_to_middle_strength: 0.01
 alert_distance: 100
 formation_flying_distance: 10000
 formation_flying_strength: 0.125
+number_of_boids: 50
+# Simulation initial conditions
+x_initial: !!python/tuple [-450, 50.0]
+y_initial: !!python/tuple [300.0, 600.0]
+vx_initial: !!python/tuple [0, 10.0]
+vy_initial: !!python/tuple [0, 10.0]
 # Plot limits - need to be python tuples
 x_plot_limits: !!python/tuple [-500, 1500]
 y_plot_limits: !!python/tuple [-500, 1500]

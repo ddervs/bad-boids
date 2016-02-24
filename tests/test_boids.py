@@ -4,11 +4,14 @@ import os
 import yaml
 from mock import patch
 
+config_filename = 'config.yaml'
+config = yaml.load(open(config_filename))
+
 
 def test_boids_fixtures():
     regression_data = yaml.load(open(os.path.join(os.path.dirname(__file__), 'fixture.yml')))
     boid_data = regression_data["reg_before"]
-    test_boids = boids.Boids(boid_data)
+    test_boids = boids.Boids(boid_data, config)
 
     # Regression test
     test_boids.update_boids()
@@ -56,9 +59,8 @@ def test_new_flock():
 def test_animate(mock_update_boids):
     regression_data = yaml.load(open(os.path.join(os.path.dirname(__file__), 'fixture.yml')))
     boid_data = regression_data["reg_before"]
-    test_boids = boids.Boids(boid_data)
+    test_boids = boids.Boids(boid_data, config)
     # Test that animation calls update_boids method
     frame = None
     test_boids.animate(frame)
     assert mock_update_boids.called
-

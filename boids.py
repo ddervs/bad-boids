@@ -1,13 +1,12 @@
 from matplotlib import pyplot as plt
 import random
-import yaml
 
 
 class Boids(object):
 
-    def __init__(self, boids):
+    def __init__(self, boids, config):
         self.boids = boids
-        self.config = yaml.load(open("config.yaml"))
+        self.config = config
         self.fig = plt.figure()
         self.ax = plt.axes(xlim=self.config['x_plot_limits'], ylim=self.config['y_plot_limits'])
         self.scatter = self.ax.scatter(self.boids[0], self.boids[1])
@@ -58,6 +57,7 @@ class Boids(object):
 
 
 def new_flock(count, xlimits, ylimits, vxlimits, vylimits):
+
     boids_x = [random.uniform(*xlimits) for x in range(count)]
     boids_y = [random.uniform(*ylimits) for x in range(count)]
     boid_x_velocities = [random.uniform(*vxlimits) for x in range(count)]
