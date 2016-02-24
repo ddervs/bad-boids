@@ -1,9 +1,10 @@
 from matplotlib import pyplot as plt
 import random
 import yaml
-import numpy as np
+
 
 class Boids(object):
+
     def __init__(self, boids):
         self.boids = boids
         self.config = yaml.load(open("config.yaml"))
@@ -11,29 +12,45 @@ class Boids(object):
         self.ax = plt.axes(xlim=self.config['x_plot_limits'], ylim=self.config['y_plot_limits'])
         self.scatter = self.ax.scatter(self.boids[0], self.boids[1])
 
-    def update_boids(self):
-        xs, ys, xvs, yvs = self.boids
+    def fly_to_middle(self):
+            xs, ys, xvs, yvs = self.boids
+            for i in range(len(xs)):
+                for j in range(len(xs)):
+                    xvs[i] += (xs[j] - xs[i]) * self.config['move_to_middle_strength'] / len(xs)
+                    yvs[i] += (ys[j] - ys[i]) * self.config['move_to_middle_strength'] / len(xs)
+            self.boids = xs, ys, xvs, yvs
 
-        # Fly towards the middle
-        for i in range(len(xs)):
-            for j in range(len(xs)):
-                xvs[i] += (xs[j] - xs[i]) * self.config['move_to_middle_strength'] / len(xs)
-                yvs[i] += (ys[j] - ys[i]) * self.config['move_to_middle_strength'] / len(xs)
-                # Fly away from nearby boids
-                if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < self.config['alert_distance']:
-                    xvs[i] += (xs[i] - xs[j])
-                    yvs[i] += (ys[i] - ys[j])
-        # Try to match speed with nearby boids
-        for i in range(len(xs)):
-            for j in range(len(xs)):
-                if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < self.config['formation_flying_distance']:
-                    xvs[i] += (xvs[j] - xvs[i]) * self.config['formation_flying_strength'] / len(xs)
-                    yvs[i] += (yvs[j] - yvs[i]) * self.config['formation_flying_strength'] / len(xs)
-        # Move according to velocities
-        for i in range(len(xs)):
-            xs[i] += xvs[i]
-            ys[i] += yvs[i]
-        self.boids = xs, ys, xvs, yvs
+    def fly_away_nearby(self):
+            xs, ys, xvs, yvs = self.boids
+            for i in range(len(xs)):
+                for j in range(len(xs)):
+                    if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < self.config['alert_distance']:
+                        xvs[i] += (xs[i] - xs[j])
+                        yvs[i] += (ys[i] - ys[j])
+            self.boids = xs, ys, xvs, yvs
+
+    def match_speed(self):
+            xs, ys, xvs, yvs = self.boids
+            for i in range(len(xs)):
+                for j in range(len(xs)):
+                    if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < self.config['formation_flying_distance']:
+                        xvs[i] += (xvs[j] - xvs[i]) * self.config['formation_flying_strength'] / len(xs)
+                        yvs[i] += (yvs[j] - yvs[i]) * self.config['formation_flying_strength'] / len(xs)
+            self.boids = xs, ys, xvs, yvs
+
+    def move_boids(self):
+            xs, ys, xvs, yvs = self.boids
+            for i in range(len(xs)):
+                xs[i] += xvs[i]
+                ys[i] += yvs[i]
+            self.boids = xs, ys, xvs, yvs
+
+    def update_boids(self):
+
+        self.fly_to_middle()
+        self.fly_away_nearby()
+        self.match_speed()
+        self.move_boids()
 
     def animate(self, frame):
         self.update_boids()
