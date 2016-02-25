@@ -11,5 +11,5 @@ boids_data = boids.new_flock(config['number_of_boids'], config['x_initial'], con
 my_boids = boids.Boids(boids_data, config)
 
 anim = animation.FuncAnimation(my_boids.fig, my_boids.animate,
-                               frames=50, interval=50)
+                               frames=config['frames'], interval=config['interval'])
 plt.show()

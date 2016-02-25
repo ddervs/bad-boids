@@ -11,3 +11,6 @@ vy_initial: [0, 10.0]
 # Plot limits - need to be python tuples
 x_plot_limits: [-500, 1500]
 y_plot_limits: [-500, 1500]
+# Animation parameters
+frames: 50
+interval: 50
