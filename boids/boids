@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+import yaml
+from matplotlib import pyplot as plt
+from boids import boids as boids
+from argparse import ArgumentParser
+
+# Simulation config
+default_config_file_name = 'config.yaml'
+config = yaml.load(open(default_config_file_name))
+
+parser = ArgumentParser(description='Runs the boids simulation.')
+parser.add_argument('--config', default=default_config_file_name,
+                        help='YAML file with simulation options. See README.md for specification.')
+arguments = parser.parse_args()
+input_config = yaml.load(open(arguments.config))
+
+# Replace with user-defined values
+for key, value in config.items():
+    if key in input_config:
+        config[key] = input_config[key]
+
+# Run simulation
+boids_data = boids.new_flock(config['number_of_boids'], config['x_initial'], config['y_initial'], config['vx_initial'],
+                             config['vy_initial'])
+my_boids = boids.Boids(boids_data, config)
+
+ani = my_boids.run_animation()
+plt.show()

@@ -6,8 +6,6 @@ Boids.egg-info/pbr.json
 Boids.egg-info/requires.txt
 Boids.egg-info/top_level.txt
 boids/__init__.py
+boids/boids
 boids/boids.py
-boids/boidser.py
-boids/command.py
 boids/run_boids.py
-scripts/boids
