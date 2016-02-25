@@ -1,12 +1,10 @@
 #!//anaconda/bin/python
 import yaml
 from matplotlib import pyplot as plt
-import os
 from boids import boids as boids
 from argparse import ArgumentParser
 
 # Simulation config
-default_config_file_name = os.path.dirname(os.path.realpath(__file__))[:-7] + 'config.yaml'
 default_config_file_name = 'config.yaml'
 config = yaml.load(open(default_config_file_name))
 

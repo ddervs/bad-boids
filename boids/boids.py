@@ -5,6 +5,10 @@ from matplotlib import animation
 
 class Boids(object):
     def __init__(self, boids, config):
+        if not isinstance(config, dict):
+            raise TypeError('config is not a dictionary')
+        if not isinstance(boids, tuple):
+            raise TypeError('boids needs to be tuple of numpy arrays')
         self.boids = boids
         self.config = config
         self.fig = plt.figure()

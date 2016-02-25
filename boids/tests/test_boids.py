@@ -3,8 +3,9 @@ import os
 import yaml
 from mock import patch
 from numpy.testing import assert_array_almost_equal
-
+from matplotlib import animation
 from boids import boids
+from nose.tools import assert_raises
 
 config_filename = 'config.yaml'
 config = yaml.load(open(config_filename))
@@ -60,3 +61,20 @@ def test_animate(mock_update_boids):
     frame = None
     test_boids.animate(frame)
     assert mock_update_boids.called
+
+
+@patch.object(animation, 'FuncAnimation')
+def test_run_animation(mock_FuncAnimation):
+    regression_data = yaml.load(open(os.path.join(os.path.dirname(__file__), 'fixture.yml')))
+    boid_data = regression_data["reg_before"]
+    test_boids = boids.Boids(boid_data, config)
+    # Test that run_animation calls FuncAnimation
+    test_boids.run_animation()
+    assert mock_FuncAnimation.called
+
+
+def test_init():
+    # Test that appropriate exceptions raised if incorrect types passed
+    some_list = [1, 2, 3]
+    assert_raises(TypeError, boids.Boids, some_list, dict(key=some_list))
+    assert_raises(TypeError, boids.Boids, (some_list, some_list), some_list)
