@@ -1,7 +1,9 @@
-import yaml
-import boids
-from copy import deepcopy
 import os
+from copy import deepcopy
+
+import yaml
+
+from boids import boids
 
 os.chdir(os.path.pardir)
 

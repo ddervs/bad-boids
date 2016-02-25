@@ -1,8 +1,10 @@
-import boids
 import os
+
 import yaml
 from mock import patch
 from numpy.testing import assert_array_almost_equal
+
+from boids import boids
 
 config_filename = 'config.yaml'
 config = yaml.load(open(config_filename))

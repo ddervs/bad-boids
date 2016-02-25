@@ -1,0 +1,13 @@
+setup.py
+Boids.egg-info/PKG-INFO
+Boids.egg-info/SOURCES.txt
+Boids.egg-info/dependency_links.txt
+Boids.egg-info/pbr.json
+Boids.egg-info/requires.txt
+Boids.egg-info/top_level.txt
+boids/__init__.py
+boids/boids.py
+boids/boidser.py
+boids/command.py
+boids/run_boids.py
+scripts/boids

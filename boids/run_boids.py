@@ -1,9 +1,10 @@
-import boids
-from matplotlib import pyplot as plt
-from matplotlib import animation
 import yaml
+from matplotlib import animation
+from matplotlib import pyplot as plt
 
-config_filename = 'config.yaml'
+import boids
+
+config_filename = '../config.yaml'
 config = yaml.load(open(config_filename))
 
 boids_data = boids.new_flock(config['number_of_boids'], config['x_initial'], config['y_initial'], config['vx_initial'],
