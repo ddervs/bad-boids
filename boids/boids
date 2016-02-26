@@ -3,18 +3,30 @@ import yaml
 from matplotlib import pyplot as plt
 from boids import boids as boids
 from argparse import ArgumentParser
+import os
+import shutil
 
 # Simulation config
-default_config_file_name = 'config.yaml'
+default_config_file_name = os.path.dirname(os.path.realpath(__file__))[:-5] + 'config.yaml'
 config = yaml.load(open(default_config_file_name))
 
 parser = ArgumentParser(description='Runs the boids simulation.')
 parser.add_argument('--config', default=default_config_file_name,
-                        help='YAML file with simulation options. See README.md for specification.')
+                    help="YAML file with simulation options. See README.md or use --example-config option for "
+                         "specification.")
+parser.add_argument('--example_config', action='store_true', default=False,
+                    help='Saves default config file to current working directory.')
 arguments = parser.parse_args()
-input_config = yaml.load(open(arguments.config))
 
-# Replace with user-defined values
+input_config = yaml.load(open(arguments.config))
+example_config = arguments.example_config
+
+if example_config:
+    shutil.copyfile(default_config_file_name, os.getcwd() + os.sep + 'config.yaml')
+    print 'config.yaml saved in current working directory.'
+    exit(0)
+
+# Replace config file with user-defined values
 for key, value in config.items():
     if key in input_config:
         config[key] = input_config[key]
