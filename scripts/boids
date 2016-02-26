@@ -8,7 +8,7 @@ import shutil
 
 # Simulation config
 
-default_config_file_name = os.path.dirname(os.path.realpath(boids.__file__))+os.sep+'config.yaml'
+default_config_file_name = os.path.dirname(os.path.realpath(boids.__file__)) + os.sep + 'config.yaml'
 config = yaml.load(open(default_config_file_name))
 
 parser = ArgumentParser(description='Runs the boids simulation.')
@@ -33,8 +33,9 @@ for key, value in config.items():
         config[key] = input_config[key]
 
 # Run simulation
-boids_data = boids.boids.new_flock(config['number_of_boids'], config['x_initial'], config['y_initial'], config['vx_initial'],
-                             config['vy_initial'])
+boids_data = boids.boids.new_flock(config['number_of_boids'], config['x_initial'], config['y_initial'],
+                                   config['vx_initial'],
+                                   config['vy_initial'])
 my_boids = boids.boids.Boids(boids_data, config)
 
 ani = my_boids.run_animation()
