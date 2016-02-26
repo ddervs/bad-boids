@@ -8,7 +8,7 @@ x_initial: [-450, 50.0]
 y_initial: [300.0, 600.0]
 vx_initial: [0, 10.0]
 vy_initial: [0, 10.0]
-# Plot limits - need to be python tuples
+# Plot limits
 x_plot_limits: [-500, 1500]
 y_plot_limits: [-500, 1500]
 # Animation parameters
