@@ -4,6 +4,8 @@ setup(
     name="Boids",
     version="0.1.0",
     packages=find_packages(exclude=['*tests']),
-    scripts=['boids/boids'],
-    install_requires=['numpy', 'matplotlib', 'mock', 'pyyaml']
+    scripts=['scripts/boids'],
+    install_requires=['numpy', 'matplotlib', 'mock', 'pyyaml'],
+    include_package_data=True,
+    package_data={'boids': ['*.yaml']}
 )

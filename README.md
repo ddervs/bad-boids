@@ -1,4 +1,9 @@
-A deliberately bad implementation of [Boids](http://dl.acm.org/citation.cfm?doid=37401.37406)
-for use as an exercise on refactoring
+Boids
+=============
 
-This is Danial Dervovic's solution to said exercise...
+Implementation of [Boids](http://dl.acm.org/citation.cfm?doid=37401.37406), used as an exercise on refactoring for the [UCL RSD Software Engineering course](http://development.rc.ucl.ac.uk/training/engineering/). Forked from [bad-boids](https://github.com/jamespjh/bad-boids).
+
+Usage
+=============
+
+
