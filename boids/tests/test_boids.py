@@ -4,10 +4,10 @@ import yaml
 from mock import patch
 from numpy.testing import assert_array_almost_equal
 from matplotlib import animation
-from boids import boids
+import boids.boids.boids as boids
 from nose.tools import assert_raises
 
-config_filename = 'config.yaml'
+config_filename = 'boids/config.yaml'
 config = yaml.load(open(config_filename))
 
 
