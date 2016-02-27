@@ -3,6 +3,7 @@
 % DOC PRE-AMBLE
 \usepackage[a4paper,margin={1in,1in}]{geometry}
 \usepackage{hyperref}
+\usepackage{url}
 \usepackage{graphicx}
 \title{MPHYG001 Assignment 2: Refactoring Boids}
 \author{\\
@@ -33,8 +34,8 @@ optional arguments:
   --example_config  Saves default config file to current working directory.
 \end{lstlisting}
 \section*{Refactorings}
-In this task, the refactoring approach was used. The common refactorings utilised are shown in Table~\ref{tab:refactor}.
-\begin{center}[h]
+In this task, the refactoring approach was used. The common refactorings utilised in the code are shown in the table below.
+\begin{center}
 \begin{tabular}{|c|c|}
     \hline
     \textbf{Code Smell} & \textbf{Commit number} \\
@@ -48,16 +49,20 @@ In this task, the refactoring approach was used. The common refactorings utilise
     Too many loops $\rightarrow$ \texttt{numpy} & \texttt{980ce16} \\
     \hline
 \end{tabular}
-The main advantage of such an approach is that at each stage, the code set still works as originally. 
-\caption{Table of refactorings along with corresponding commit numbers.}
-\label{tab:refactor}
 \end{center}
-\section*{UML Diagram}
-\begin{figure}[h]
+The main advantage of such an approach is that at each stage, the code set still works as originally. This contrasts with the approach of rewriting code, which is both more bug-prone, and requires significant time until the new working code set makes itself available. Refactoring stops code from \emph{rotting} without breaking it, both in the sense of ensuring it is resistant to new developments in the environment of its dependencies, and keeping it readable for future maintenance. The UML diagram for the \texttt{boids} package is shown in Figure~\ref{fig:UML}.
+\begin{figure}
 \centering
-\includegraphics[width=0.25\textwidth]{UML}
+\includegraphics[width=0.25\linewidth]{UML}
 \caption{UML diagram of \texttt{boids} package.}
 \label{fig:UML}
 \end{figure}
+\section*{Problems}
+The main problems encountered in the project were in integrating the configuration file with the command line interface, and in plotting the animation.
+\par
+It was found that in \texttt{setup.py}, it was needed to specify the fact that there was a non-python config file in the package. This was because under \texttt{pip} installation, only python files are installed by default. Thus, when the config file was imported in the code, it would only work when executed in the package's root directory.
+\par
+Another big problem was plotting the animation. The main issue is discussed at \url{http://stackoverflow.com/questions/21099121/python-matplotlib-unable-to-call-funcanimation-from-inside-a-function} and \href{https://github.com/matplotlib/matplotlib/issues/1656}{\texttt{matplotlib issue \#1656}}. For certain GUI backends, if the animation isn't stored in a persistent variable, it will quietly fail, as python's garbage collection will clear the plot. Thus the command line entry point scripts had to be restructured (commit \texttt{eecacbf}) to avoid this happening.
+
 
 \end{document}

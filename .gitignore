@@ -4,3 +4,4 @@
 build*
 Boids.egg*
 dist*
+*.gz
